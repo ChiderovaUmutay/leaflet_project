@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from webapp.models import Area, Plot, Region
-from webapp.serializer import PlotSerializer, AreaSerializer
+from webapp.serializer import PlotSerializer, AreaSerializer, RegionSerializer
 
 serializer_data = {}
 
@@ -39,3 +39,11 @@ class AreaAdd(APIView):
         serializer = self.area_serializer_class(area_serializer_data).data
         return Response(serializer)
 
+
+class RegionAdd(APIView):
+    region_serializer_class = RegionSerializer
+
+    def post(self, request, *args, **kwargs):
+        new_region = Region.objects.create(**request.data)
+        serializer = self.region_serializer_class(new_region).data
+        return Response(serializer)
