@@ -5,8 +5,6 @@ from django.contrib.gis.db import models
 class Region(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название региона")
     coordinates = models.GeometryField(srid=32140, verbose_name="Координаты региона")
-    areas = models.ManyToManyField("webapp.Area", related_name="region_areas",
-                                   verbose_name="Районы")
 
     def __str__(self):
         return f"Регион {self.name}"
@@ -20,8 +18,13 @@ class Region(models.Model):
 class Area(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название района")
     coordinates = models.GeometryField(srid=32140, verbose_name="Координаты района")
-    plots = models.ManyToManyField("webapp.Plot", related_name="area_plots",
-                                   verbose_name="Поля")
+    region = models.ForeignKey(
+        "webapp.Region",
+        related_name="area_region",
+        verbose_name="Регион",
+        on_delete=models.CASCADE,
+        default=None
+    )
 
     def __str__(self):
         return f"Район {self.name}"
@@ -35,6 +38,12 @@ class Area(models.Model):
 class Plot(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название поля")
     coordinates = models.GeometryField(srid=32140, verbose_name="Координаты поля")
+    area = models.ForeignKey(
+        "webapp.Area",
+        related_name="plot_area",
+        verbose_name="Район",
+        on_delete=models.SET_NULL,
+        null=True, blank=True)
 
     def __str__(self):
         return f"Поле {self.name}"
@@ -43,4 +52,3 @@ class Plot(models.Model):
         db_table = "plots"
         verbose_name = "Поле"
         verbose_name_plural = "Поля"
-
