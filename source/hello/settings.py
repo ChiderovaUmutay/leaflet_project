@@ -18,7 +18,6 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -29,7 +28,6 @@ SECRET_KEY = 'django-insecure-b9#=0xt2$y*44-(3^c(i5j7!@-sz-4&sfb65o9lt2-_g=l+g@^
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -131,3 +129,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LEAFLET_CONFIG = {
+    'TILES': [
+        ('Google', 'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+            'attribution': 'Google',
+            'minZoom': 10,
+            'maxZoom': 24,
+            'subdomains': ['mt0', 'mt1', 'mt2', 'mt3']}),
+        ('OSP', 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            'attribution': 'OpenStreetMap', 'minZoom': 10, 'maxZoom': 24})
+    ]
+}
