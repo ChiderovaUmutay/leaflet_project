@@ -7,12 +7,27 @@ from webapp.serializer import PlotSerializer
 from webapp.views.views_secondary_functions import get_serializer_data
 
 
-class PlotAdd(APIView):
-    plot_serializer_class = PlotSerializer
+class PlotView(APIView):
+    serializer_class = PlotSerializer
 
     def post(self, request, *args, **kwargs):
         area = get_object_or_404(Area, pk=kwargs.get("pk"))
         new_plot = Plot.objects.create(**request.data, area=area)
         plot_serializer_data = get_serializer_data(new_plot, area, related_object_field="area")
-        serializer = self.plot_serializer_class(plot_serializer_data).data
+        serializer = self.serializer_class(plot_serializer_data).data
         return Response(serializer)
+
+    def put(self, request, *args, pk, **kwargs):
+        plot = get_object_or_404(Plot, pk=pk)
+        serializer = self.serializer_class(data=request.data, instance=plot)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, *args, pk, **kwargs):
+        plot = get_object_or_404(Plot, pk=pk)
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        plot.delete()
+        return Response({"message": "Поле успешно удалено"})
+

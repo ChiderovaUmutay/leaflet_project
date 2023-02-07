@@ -1,9 +1,13 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
-from webapp.views import PlotAdd, AreaAdd, RegionAdd
+from webapp.views import PlotView, AreaView, RegionViewSet
+
+router = DefaultRouter()
+router.register("regions", RegionViewSet)
 
 urlpatterns = [
-    path("area/<int:pk>/plot/add/", PlotAdd.as_view()),
-    path("region/<int:pk>/area/add/", AreaAdd.as_view()),
-    path("region/add/", RegionAdd.as_view())
+    path("area/<int:pk>/plot/add/", PlotView.as_view()),
+    path("plot/<int:pk>/", PlotView.as_view()),
+
 ]
