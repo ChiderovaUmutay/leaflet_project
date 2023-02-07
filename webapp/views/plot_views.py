@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -15,19 +17,16 @@ class PlotView(APIView):
         new_plot = Plot.objects.create(**request.data, area=area)
         plot_serializer_data = get_serializer_data(new_plot, area, related_object_field="area")
         serializer = self.serializer_class(plot_serializer_data).data
-        return Response(serializer)
+        return Response(serializer, status=HTTPStatus.CREATED)
 
     def put(self, request, *args, pk, **kwargs):
         plot = get_object_or_404(Plot, pk=pk)
         serializer = self.serializer_class(data=request.data, instance=plot)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, status=HTTPStatus.FOUND)
 
     def delete(self, request, *args, pk, **kwargs):
         plot = get_object_or_404(Plot, pk=pk)
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
         plot.delete()
-        return Response({"message": "Поле успешно удалено"})
-
+        return Response({"message": "Поле успешно удалено"}, status=HTTPStatus.NO_CONTENT)

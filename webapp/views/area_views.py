@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -15,18 +17,16 @@ class AreaView(APIView):
         new_area = Area.objects.create(**request.data, region=region)
         area_serializer_data = get_serializer_data(new_area, region, related_object_field="region")
         serializer = self.serializer_class(area_serializer_data).data
-        return Response(serializer)
+        return Response(serializer, status=HTTPStatus.CREATED)
 
     def put(self, request, *args, pk, **kwargs):
         area = get_object_or_404(Area, pk=pk)
         serializer = self.serializer_class(data=request.data, instance=area)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, status=HTTPStatus.FOUND)
 
     def delete(self, request, *args, pk, **kwargs):
         area = get_object_or_404(Area, pk=pk)
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
         area.delete()
-        return Response({"message": "Район успешно удален"})
+        return Response({"message": "Район успешно удален"}, status=HTTPStatus.NO_CONTENT)
