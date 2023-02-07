@@ -5,3 +5,4 @@ python-dotenv==0.21.1
 djangorestframework-gis==1.0
 djangorestframework==3.14.0
 djangorestframework-gis==1.0
+factory-boy==3.2.1
