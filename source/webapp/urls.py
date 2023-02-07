@@ -11,4 +11,5 @@ urlpatterns = [
     path("plot/<int:pk>/", PlotView.as_view()),
     path("region/<int:pk>/area/add/", AreaView.as_view()),
     path("area/<int:pk>/", AreaView.as_view()),
+    path("", include(router.urls))
 ]
